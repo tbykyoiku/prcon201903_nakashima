@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
+    <title>メモ帳</title>
+    <style type="text/css">
+        h1 {
+            text-align: center;
+        }
+        div#textarea {
+            font-size:15px;
+
+            display: block;
+            margin: auto;
+            padding: 0.5em;
+            width: 500px;
+            height: 250px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: #aaa;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        form {
+            display: block;
+            margin: auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 510px;
+            text-align: right;
+        }
+        input {
+            padding: 5px 10px 5px 10px;
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="samplecommon.css">
+    <link rel="stylesheet" href="sample001.css">
+
+    <script type="text/javascript">
+        var storage = localStorage;
+        function copyText() {
+            var ta = document.createElement("textarea")
+            var text = document.getElementById('textarea').innerText
+            ta.value = text
+            document.body.appendChild(ta)
+            ta.select()
+            document.execCommand("copy")
+            ta.parentElement.removeChild(ta)
+        }
+        function cleartextarea() {//テキストエリアのクリア
+            document.getElementById("textarea").innerText = "";
+        }
+        function TextSave() {
+            var text = document.getElementById('textarea').innerText
+            var name = document.getElementById('name').value || 'memo'
+            var blob = new Blob([text], { type: 'text/plain' })
+            var link = document.getElementById('DL_link')
+
+            link.href = window.URL.createObjectURL(blob)
+
+            if ('download' in link) {
+                link.download = name + '.txt'
+                link.click()
+            } else {
+                link.textContent = 'このブラウザは対応していません。'
+            }
+        }
+        size = 15;
+        function change1() {     
+            size += 3;
+            if (size <= 80) {
+                textarea.style.fontSize = size + "px";
+            }
+        }
+        function change2() {  
+            size -= 3;
+            if (size >= 5) { 
+                textarea.style.fontSize = size + "px";
+            }
+        }
+        function change3() { 
+            size = 15;
+            textarea.style.fontSize = 15 + "px";
+        }
+    </script>
+</head>
+<body>
+    <h1>メモ帳</h1>
+    <form action="#">
+        フォントサイズ変更：
+        <input id="larger" type="button" name="largerbtn" value="拡大" onclick="change1()" />
+        <input id="smaller" type="button" name="smallerbtn" value="縮小" onclick="change2()" />
+        <input id="clear" type="button" name="smallerbtn" value="元に戻す" onclick="change3()" />
+    </form>
+    <div id="textarea" contenteditable="true">
+        <p></p>
+    </div>
+    <form action="#">
+        <input id="copybtn" type="button" name="copybtn" value="コピー" onclick="copyText()" />
+        <input type="button" name="clearbtn" value="クリア" onclick="cleartextarea()" />
+    </form>
+    <form>
+        ファイル名：<input id="name" placeholder="memo">.txt
+        <input type="button" value="保存" onclick="TextSave()"/>
+        <a id='DL_link'></a>
+    </form>
+</body>
+</html>
